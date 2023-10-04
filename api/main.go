@@ -16,6 +16,7 @@ func main() {
 	router.Use(cors.New(config))
 
 	routes.HealthRoute(router)
+	routes.ItemRoute(router)
 
 	router.Run()
 }
