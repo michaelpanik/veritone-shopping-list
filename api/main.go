@@ -1,25 +1,21 @@
 package main
 
 import (
-	"net/http"
+	"michaelpanik/veritone-shopping-list-api/routes"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	r := gin.Default()
+	router := gin.Default()
 
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"http://localhost:8000"}
 
-	r.Use(cors.New(config))
+	router.Use(cors.New(config))
 
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Hello, world!",
-		})
-	})
+	routes.HealthRoute(router)
 
-	r.Run()
+	router.Run()
 }
