@@ -1,8 +1,6 @@
 package main
 
 import (
-	"michaelpanik/veritone-shopping-list-api/routes"
-
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -15,8 +13,13 @@ func main() {
 
 	router.Use(cors.New(config))
 
-	routes.HealthRoute(router)
-	routes.ItemRoute(router)
+	item := ServerInterfaceImpl()
+
+	router.GET("/item", item.GetAllItems)
+	router.GET("/item/:id", item.GetOneItem)
+	router.POST("/item", item.AddItem)
+	router.PUT("/item/:id", item.UpdateItem)
+	router.DELETE("/item/:id", item.DeleteItem)
 
 	router.Run()
 }
