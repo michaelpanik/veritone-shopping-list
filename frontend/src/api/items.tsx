@@ -1,49 +1,34 @@
+import { AxiosResponse } from "axios"
 import { Item } from "../components/ItemsList"
+import api from './index'
+
+type ItemResponse = {
+    status: number
+    data: Item | Item[]
+}
 
 export const getItems = async () => {
-    const items = [
-        {
-            id: 1,
-            name: "Tomatoes",
-            description: "Green cherry tomatoes",
-            quantity: 1,
-            purchased: false
-        },
-        {
-            id: 2,
-            name: "Carrots",
-            description: "Baby carrots",
-            quantity: 1,
-            purchased: true
-        },
-        {
-            id: 3,
-            name: "Milk",
-            description: "Whole milk",
-            quantity: 1,
-            purchased: false
-        },
-    ]
-    return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(items), 2000)
-    })
+    const items: AxiosResponse<ItemResponse> = await api.get('item')
+    return items.data.data
 }
 
 export async function updateItem(item: Item): Promise<Item>
 export async function updateItem(item: Item, key?: keyof Item, value?: any): Promise<Item> {
     if (key !== undefined && value !== undefined) {
         item[key] = value
-        return item
     }
 
-    return item
+    const res = await api.put(`item/${item.ID}`, item)
+    return res.data.data
 }
 
 export const deleteItem = async (itemId: number): Promise<number> => {
-    return itemId
-
+    const res = await api.delete(`item/${itemId}`)
+    console.log(res)
+    return res.data.data
 }
-export const createItem = async (item: Item): Promise<Item> => {
-    return item
 
+export const createItem = async (item: Item): Promise<Item | Item[]> => {
+    const res: AxiosResponse<ItemResponse> = await api.post('item', item)
+    return res.data.data
 }

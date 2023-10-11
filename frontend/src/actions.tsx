@@ -1,5 +1,5 @@
 import { Item } from "./components/ItemsList"
-import { getItems as getItemsAPI, updateItem as updateItemAPI, deleteItem as deleteItemAPI, createItem as createItemAPI } from "./api/items"
+import { getItems, updateItem as updateItemAPI, deleteItem as deleteItemAPI, createItem as createItemAPI } from "./api/items"
 
 export enum ACTION {
     SET_ITEMS,
@@ -27,8 +27,7 @@ export const setLoadingItems = (isLoading: boolean): Action => {
 }
 
 export const loadItems = async (): Promise<Action> => {
-    const items = await getItemsAPI()
-    console.log(items)
+    const items = await getItems()
 
     return {
         type: ACTION.SET_ITEMS,
@@ -38,8 +37,8 @@ export const loadItems = async (): Promise<Action> => {
     }
 }
 
-export const updateItem = (item: Item): Action => {
-    updateItemAPI(item)
+export const updateItem = async (item: Item): Promise<Action> => {
+    await updateItemAPI(item)
 
     return {
         type: ACTION.UPDATE_ITEM,
@@ -47,33 +46,37 @@ export const updateItem = (item: Item): Action => {
     }
 }
 
-export const deleteItem = (itemId: number): Action => {
-    deleteItemAPI(itemId)
+export const deleteItem = async (itemId: number): Promise<Action> => {
+    try {
+        await deleteItemAPI(itemId)
 
-    return {
-        type: ACTION.DELETE_ITEM,
-        payload: {
-            itemId
+        return {
+            type: ACTION.DELETE_ITEM,
+            payload: {
+                itemId
+            }
         }
+    } catch (error) {
+        throw error
     }
 }
 
-export const addItem = (item: Item): Action => {
-    createItemAPI(item)
+export const addItem = async (item: Item): Promise<Action> => {
+    const newItem = await createItemAPI(item)
 
     return {
         type: ACTION.ADD_ITEM,
-        payload: item
+        payload: newItem
     }
 }
 
 export const toggleItemPurchased = (item: Item, purchased: boolean): Action => {
-    updateItem(item, 'purchased', purchased)
+    updateItemAPI(item, 'purchased', purchased)
 
     return {
         type: ACTION.SET_ITEM_PURCHASED,
         payload: {
-            itemId: item.id,
+            itemId: item.ID,
             purchased
         }
     }

@@ -3,7 +3,7 @@ import ItemsList from './components/ItemsList'
 import NavBar from './components/NavBar'
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
-import Store, { Context } from './context'
+import Store from './context'
 
 function App() {
   return (

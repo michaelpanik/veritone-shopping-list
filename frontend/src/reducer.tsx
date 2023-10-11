@@ -20,7 +20,7 @@ export const reducer = (state: AppState, action: Action) => {
                 ...state,
                 items: state.items.map(item => {
                     console.log(item, action.payload)
-                    if (item.id == action.payload.id) {
+                    if (item.ID == action.payload.ID) {
                         return action.payload
                     }
                     return item
@@ -30,7 +30,7 @@ export const reducer = (state: AppState, action: Action) => {
         case ACTION.DELETE_ITEM:
             return {
                 ...state,
-                items: state.items.filter(item => item.id != action.payload.itemId)
+                items: state.items.filter(item => item.ID != action.payload.itemId)
             }
 
         case ACTION.ADD_ITEM:
@@ -41,7 +41,7 @@ export const reducer = (state: AppState, action: Action) => {
             }
 
         case ACTION.SET_ITEM_PURCHASED:
-            const itemIndex = state.items.findIndex(item => item.id == action.payload.itemId)
+            const itemIndex = state.items.findIndex(item => item.ID == action.payload.itemId)
             const item = state.items[itemIndex]
             return {
                 ...state,

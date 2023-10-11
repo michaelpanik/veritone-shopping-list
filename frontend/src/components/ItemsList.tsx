@@ -17,7 +17,7 @@ import { deleteItem, toggleItemPurchased } from '../actions';
 import Loader from './Loader';
 
 export type Item = {
-    id: number
+    ID: number
     name: string
     description: string
     quantity: number
@@ -45,8 +45,8 @@ const ItemsList = () => {
         }
     }
 
-    const handleDeletedItem = (item: Item) => {
-        dispatch(deleteItem(item.id))
+    const handleDeletedItem = async (item: Item) => {
+        dispatch(await deleteItem(item.ID))
     }
 
     return (
@@ -75,7 +75,7 @@ const ItemsList = () => {
                             {state.items.map((item, i) => (
                                 <Slide
                                     style={{ transitionDelay: `${i * 50}ms` }}
-                                    key={item.id}
+                                    key={item.ID}
                                     direction="left"
                                     mountOnEnter
                                     unmountOnExit
@@ -87,7 +87,7 @@ const ItemsList = () => {
 
                                         <Checkbox checked={item.purchased} sx={{ mr: 1 }}
                                             onChange={e => {
-                                                dispatch(toggleItemPurchased(item.id, e.target.checked))
+                                                dispatch(toggleItemPurchased(item, e.target.checked))
                                             }} />
                                         <Box sx={{ flexGrow: 1 }}>
                                             <Typography variant="body1" sx={{ fontWeight: 500, color: item.purchased ? 'primary.main' : 'text.primary', textDecoration: item.purchased ? 'line-through' : 'none' }}>

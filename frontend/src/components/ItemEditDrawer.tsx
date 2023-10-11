@@ -11,6 +11,7 @@ import InputLabel from '@mui/material/InputLabel'
 import { Item } from "./ItemsList"
 import { addItem, updateItem } from "../actions"
 import { Context } from "../context"
+import Loader from "./Loader"
 
 type ItemEditDrawerProps = {
     isOpen: boolean
@@ -18,10 +19,11 @@ type ItemEditDrawerProps = {
     item: Item | null
 }
 
-const defaultItemState = { id: 1, name: "", description: "", quantity: 1, purchased: false }
+const defaultItemState = { name: "", description: "", quantity: 1, purchased: false }
 
 const ItemEditDrawer = ({ isOpen, toggleOpen, item }: ItemEditDrawerProps) => {
-    const [itemData, setItemData] = useState<Item>(defaultItemState)
+    const [itemData, setItemData] = useState<Item | Partial<Item>>(defaultItemState)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const { dispatch } = useContext(Context)
 
     useEffect(() => {
@@ -34,15 +36,18 @@ const ItemEditDrawer = ({ isOpen, toggleOpen, item }: ItemEditDrawerProps) => {
         setItemData({ ...itemData, [key]: value })
     }
 
-    const saveChanges = () => {
+    const saveChanges = async () => {
         if (!itemData) return
 
+        setIsLoading(true)
+
         if (item) {
-            dispatch(updateItem(itemData))
+            dispatch(await updateItem(itemData))
         } else {
-            dispatch(addItem(itemData))
+            dispatch(await addItem(itemData))
         }
 
+        setIsLoading(false)
         toggleOpen()
     }
 
@@ -80,15 +85,18 @@ const ItemEditDrawer = ({ isOpen, toggleOpen, item }: ItemEditDrawerProps) => {
                         <FormControl fullWidth margin="normal">
                             <InputLabel id="quantityLabel">How many?</InputLabel>
                             <Select labelId="quantityLabel" label="How many?" value={itemData.quantity}
-                                onChange={e => handleChange('quantity', e.target.value)}
+                                onChange={e => handleChange('quantity', e.target.value.toString())}
                             >
                                 {[1, 2, 3].map(val => <MenuItem value={val} key={`option_${val}`}>{val}</MenuItem>)}
                             </Select>
                         </FormControl>
                     </Box>}
                     <Box sx={{ px: 3, py: 2, display: "flex", justifyContent: "flex-end", gap: 3 }}>
-                        <Button variant="text" sx={{ textTransform: "capitalize", color: 'text.primary' }} onClick={toggleOpen}>Cancel</Button>
-                        <Button variant="contained" sx={{ textTransform: "capitalize" }} onClick={saveChanges}>{item ? "Save Item" : "Add Task"}</Button>
+                        <Button variant="text" sx={{ textTransform: "capitalize", color: 'text.primary' }} onClick={toggleOpen} disabled={isLoading}>Cancel</Button>
+                        <Button variant="contained" sx={{ textTransform: "capitalize" }} onClick={saveChanges} disabled={isLoading}>
+                            {isLoading && <Loader style={{ width: '1em', height: '1em', marginRight: '0.5em' }} />}
+                            {item ? "Save Item" : "Add Task"}
+                        </Button>
                     </Box>
                 </Box>
             </Drawer>
