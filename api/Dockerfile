@@ -4,6 +4,6 @@ WORKDIR /api
 
 COPY . .
 
-RUN go build -o main main.go
+RUN go build -o main
 
 CMD ["./main"]
