@@ -16,6 +16,11 @@ services:
       - db
     volumes:
       - ./api:/api
+    environment:
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: shopping_list
 
   db:
     image: postgres
