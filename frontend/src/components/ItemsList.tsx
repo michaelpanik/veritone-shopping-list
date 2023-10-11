@@ -10,6 +10,8 @@ import Loader from './Loader';
 import ItemsListRow from './ItemsListRow';
 import NoItemsState from './NoItemsState';
 import Slide from '@mui/material/Slide';
+import DeleteItemConfirmationModal from './DeleteItemConfirmationModal';
+import { deleteItem } from '../context/actions';
 
 export type Item = {
     ID: number
@@ -20,10 +22,11 @@ export type Item = {
 }
 
 const ItemsList = () => {
-    const { state } = useContext(Context)
+    const { state, dispatch } = useContext(Context)
     const [isDrawerMounted, setIsDrawerMounted] = useState(false)
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [activeItem, setActiveItem] = useState<Item | null>(null)
+    const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] = useState<boolean>(false)
 
     const toggleDrawerOpen = () => {
         if (isDrawerOpen) {
@@ -43,6 +46,17 @@ const ItemsList = () => {
     const handleEditClick = (item: Item | null) => {
         setActiveItem(item)
         toggleDrawerOpen()
+    }
+
+    const handleDeleteClick = (item: Item) => {
+        setActiveItem(item)
+        setDeleteConfirmationModalOpen(true)
+    }
+
+    const handleContinueDelete = async () => {
+        if (!activeItem) throw new Error("No active item to delete")
+        dispatch(await deleteItem(activeItem.ID))
+        setDeleteConfirmationModalOpen(false)
     }
 
     return (
@@ -72,6 +86,7 @@ const ItemsList = () => {
                                     {ItemsListRow({
                                         item,
                                         handleEditClick,
+                                        handleDeleteClick,
                                         key: `item_list_row_${i}`
                                     })}
                                 </Slide>
@@ -81,6 +96,7 @@ const ItemsList = () => {
                 </>
                 : null
             }
+            <DeleteItemConfirmationModal open={deleteConfirmationModalOpen} handleCancel={() => setDeleteConfirmationModalOpen(false)} handleContinue={handleContinueDelete} />
             {isDrawerMounted && <ItemEditDrawer isOpen={isDrawerOpen} toggleOpen={toggleDrawerOpen} item={activeItem} />}
         </>
     )

@@ -14,14 +14,11 @@ import { Item } from './ItemsList';
 type ItemsListRowProps = {
     item: Item
     handleEditClick: (item: Item) => void
+    handleDeleteClick: (item: Item) => void
 }
 
-const ItemsListRow: React.FC<ItemsListRowProps> = ({ item, handleEditClick }) => {
+const ItemsListRow: React.FC<ItemsListRowProps> = ({ item, handleEditClick, handleDeleteClick }) => {
     const { dispatch } = useContext(Context)
-
-    const handleDeletedItem = async (item: Item) => {
-        dispatch(await deleteItem(item.ID))
-    }
 
     const handlePurchasedItem = async (e: Event) => {
         dispatch(await toggleItemPurchased(item, e.target?.checked));
@@ -48,7 +45,7 @@ const ItemsListRow: React.FC<ItemsListRowProps> = ({ item, handleEditClick }) =>
                 </IconButton>
             </Tooltip>
             <Tooltip title="Delete">
-                <IconButton onClick={() => handleDeletedItem(item)}>
+                <IconButton onClick={() => handleDeleteClick(item)}>
                     <DeleteOutlined />
                 </IconButton>
             </Tooltip>
