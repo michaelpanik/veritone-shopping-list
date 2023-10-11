@@ -10,11 +10,10 @@ import (
 
 type Item struct {
 	gorm.Model
-	Id          int
-	Name        string
-	Description string
-	Quantity    int
-	Purchased   bool
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Quantity    int    `json:"quantity"`
+	Purchased   bool   `json:"purchased"`
 }
 
 type GetAllItemsResponseObject struct {
@@ -106,19 +105,34 @@ func (db *DBContext) DeleteItem(c *gin.Context) {
 	_, error := db.DeleteItemById(id)
 
 	if error != nil {
-		c.JSON(http.StatusAccepted, DeleteItemResponseObject{Status: http.StatusAccepted, Message: "Resource deleted successfully."})
-	} else {
 		c.JSON(http.StatusNotFound, ErrorResponseObject{Status: http.StatusNotFound, Message: "No such item found"})
+	} else {
+		c.JSON(http.StatusAccepted, DeleteItemResponseObject{Status: http.StatusAccepted, Message: "Resource deleted successfully."})
 	}
 }
 
 func (db *DBContext) UpdateItem(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Params.ByName("id"))
-	updatedItem, error := db.FindOneItemById(id)
 
-	if error != nil {
-		c.JSON(http.StatusNotFound, ErrorResponseObject{Status: http.StatusNotFound, Message: "No such item found"})
-	} else {
-		c.JSON(http.StatusOK, UpdateItemResponseObject{Status: http.StatusOK, Data: updatedItem})
+	var newItem struct {
+		Name        string `json:"name" binding:"required"`
+		Description string `json:"description"`
+		Quantity    int    `json:"quantity"`
+		Purchased   bool   `json:"purchased"`
+	}
+
+	if c.Bind(&newItem) == nil {
+		updatedItem, error := db.UpdateItemById(id, Item{
+			Name:        newItem.Name,
+			Description: newItem.Description,
+			Quantity:    newItem.Quantity,
+			Purchased:   newItem.Purchased,
+		})
+
+		if error != nil {
+			c.JSON(http.StatusNotFound, ErrorResponseObject{Status: http.StatusNotFound, Message: "No such item found"})
+		} else {
+			c.JSON(http.StatusOK, UpdateItemResponseObject{Status: http.StatusOK, Data: updatedItem})
+		}
 	}
 }
