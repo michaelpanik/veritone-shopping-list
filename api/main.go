@@ -13,13 +13,14 @@ func main() {
 
 	router.Use(cors.New(config))
 
-	item := ServerInterfaceImpl()
+	db := NewDBContext()
+	http := NewHTTPContext(&gin.Context{}, db)
 
-	router.GET("/item", item.GetAllItems)
-	router.GET("/item/:id", item.GetOneItem)
-	router.POST("/item", item.AddItem)
-	router.PUT("/item/:id", item.UpdateItem)
-	router.DELETE("/item/:id", item.DeleteItem)
+	router.GET("/item", http.GetAllItems)
+	router.GET("/item/:id", http.GetOneItem)
+	router.POST("/item", http.AddItem)
+	router.PUT("/item/:id", http.UpdateItem)
+	router.DELETE("/item/:id", http.DeleteItem)
 
 	router.Run()
 }
