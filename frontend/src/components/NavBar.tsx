@@ -6,9 +6,9 @@ import Typography from '@mui/material/Typography'
 const NavBar = () => {
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
+            <AppBar position="static" elevation={0} sx={{ background: "#4D81B7" }}>
                 <Toolbar>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, textTransform: 'uppercase' }}>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, textTransform: 'uppercase', fontFamily: 'Dosis' }}>
                         Shopping List
                     </Typography>
                 </Toolbar>
