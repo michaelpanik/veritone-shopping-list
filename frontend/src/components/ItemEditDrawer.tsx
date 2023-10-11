@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import { Item } from "./ItemsList"
-import { addItem, updateItem } from "../actions"
+import { addItem, updateItem } from "../context/actions"
 import { Context } from "../context"
 import Loader from "./Loader"
 

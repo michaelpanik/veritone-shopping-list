@@ -1,6 +1,8 @@
 # Veritone Shopping List
 
-React + MaterialUI + 
+React + MaterialUI + Axios
+Go + Gin + GORM
+Docker
 
 ## Local Development
 ```bash

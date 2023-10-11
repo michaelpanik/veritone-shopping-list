@@ -13,7 +13,7 @@ import DeleteOutlined from '@mui/icons-material/DeleteOutlined'
 import ItemEditDrawer from './ItemEditDrawer';
 import { useContext, useState } from 'react';
 import { Context } from '../context';
-import { deleteItem, toggleItemPurchased } from '../actions';
+import { deleteItem, toggleItemPurchased } from '../context/actions';
 import Loader from './Loader';
 
 export type Item = {
