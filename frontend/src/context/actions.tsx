@@ -59,10 +59,11 @@ export const loadItems = async () => {
  */
 export const updateItem = async (item: Item) => {
     try {
-        await updateItemAPI(item);
+        const updatedItem = await updateItemAPI(item);
+
         return {
             type: ACTION.UPDATE_ITEM,
-            payload: item
+            payload: updatedItem
         };
     } catch (error) {
         throw new Error(`Failed to update item: ${error}`);

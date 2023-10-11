@@ -1,5 +1,6 @@
 import { ACTION, Action } from "./actions";
-import { AppState } from "./context";
+import { AppState } from ".";
+import { Item } from "../components/ItemsList";
 
 /**
  * Reducer function for managing application state.
@@ -25,7 +26,7 @@ export const reducer = (state: AppState, action: Action) => {
         case ACTION.UPDATE_ITEM:
             return {
                 ...state,
-                items: state.items.map(item => {
+                items: state.items.map((item: Item) => {
                     if (item.ID === action.payload.ID) {
                         return action.payload;
                     }
@@ -36,7 +37,7 @@ export const reducer = (state: AppState, action: Action) => {
         case ACTION.DELETE_ITEM:
             return {
                 ...state,
-                items: state.items.filter(item => item.ID !== action.payload.itemId)
+                items: state.items.filter((item: Item) => item.ID !== action.payload.itemId)
             };
 
         case ACTION.ADD_ITEM:
@@ -47,7 +48,7 @@ export const reducer = (state: AppState, action: Action) => {
             };
 
         case ACTION.SET_ITEM_PURCHASED:
-            const itemIndex = state.items.findIndex(item => item.ID === action.payload.itemId);
+            const itemIndex = state.items.findIndex((item: Item) => item.ID === action.payload.itemId);
             const updatedItem = {
                 ...state.items[itemIndex],
                 purchased: action.payload.purchased

@@ -39,8 +39,11 @@ export async function updateItem<T extends keyof Item>(item: Item, key?: T, valu
         item[key] = value;
     }
 
+    console.log(item)
+
     try {
         const response: AxiosResponse<ItemResponse> = await api.put(`item/${item.ID}`, item);
+        console.log(response)
         return response.data.data;
     } catch (error) {
         throw new Error(`Failed to update item: ${error}`);
@@ -55,7 +58,6 @@ export async function updateItem<T extends keyof Item>(item: Item, key?: T, valu
 export const deleteItem = async (itemId: number): Promise<number> => {
     try {
         const response: AxiosResponse<number> = await api.delete(`item/${itemId}`);
-        console.log(response);
         return response.data;
     } catch (error) {
         throw new Error(`Failed to delete item: ${error}`);

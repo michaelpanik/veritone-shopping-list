@@ -1,55 +1,55 @@
-import { Fragment, useContext, useEffect, useState } from "react"
-import Drawer from '@mui/material/Drawer'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import TextField from '@mui/material/TextField'
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
-import { Item } from "./ItemsList"
-import { addItem, updateItem } from "../context/actions"
-import { Context } from "../context"
-import Loader from "./Loader"
+import { Fragment, useContext, useEffect, useState } from "react";
+import Drawer from '@mui/material/Drawer';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import { Item } from "./ItemsList";
+import { addItem, updateItem } from "../context/actions";
+import { Context } from "../context";
+import Loader from "./Loader";
 
-type ItemEditDrawerProps = {
+export type ItemEditDrawerProps = {
     isOpen: boolean
     toggleOpen: () => void
     item: Item | null
 }
 
-const defaultItemState = { name: "", description: "", quantity: 1, purchased: false }
+export const defaultItemState = { name: "", description: "", quantity: 1, purchased: false }
 
 const ItemEditDrawer = ({ isOpen, toggleOpen, item }: ItemEditDrawerProps) => {
-    const [itemData, setItemData] = useState<Item | Partial<Item>>(defaultItemState)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const { dispatch } = useContext(Context)
+    const [itemData, setItemData] = useState<Item>(defaultItemState);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { dispatch } = useContext(Context);
 
     useEffect(() => {
         if (item !== null) {
-            setItemData(item)
+            setItemData(item);
         }
-    }, [])
+    }, []);
 
     const handleChange = (key: keyof Item, value: string) => {
-        setItemData({ ...itemData, [key]: value })
-    }
+        setItemData({ ...itemData, [key]: value });
+    };
 
     const saveChanges = async () => {
-        if (!itemData) return
+        if (!itemData) return;
 
-        setIsLoading(true)
+        setIsLoading(true);
 
         if (item) {
-            dispatch(await updateItem(itemData))
+            dispatch(await updateItem(itemData));
         } else {
-            dispatch(await addItem(itemData))
+            dispatch(await addItem(itemData));
         }
 
-        setIsLoading(false)
-        toggleOpen()
-    }
+        setIsLoading(false);
+        toggleOpen();
+    };
 
     return (
         <Fragment key="right">
@@ -68,6 +68,7 @@ const ItemEditDrawer = ({ isOpen, toggleOpen, item }: ItemEditDrawerProps) => {
                         </Typography>
                     </Box>
                     {itemData && <Box sx={{ flexGrow: 1, px: 3, py: 5 }}>
+                        {itemData.ID}
                         <Typography variant="body1" sx={{ fontWeight: 500, }}>
                             {item ? "Edit an Item" : "Add an Item"}
                         </Typography>
@@ -76,12 +77,10 @@ const ItemEditDrawer = ({ isOpen, toggleOpen, item }: ItemEditDrawerProps) => {
                         </Typography>
                         <TextField id="outlined-basic" label="Item Name" variant="outlined" fullWidth margin="normal"
                             value={itemData.name}
-                            onChange={e => handleChange('name', e.target.value)}
-                        />
+                            onChange={e => handleChange('name', e.target.value)} />
                         <TextField id="outlined-basic" label="Description" variant="outlined" rows={6} multiline fullWidth margin="normal"
                             value={itemData.description}
-                            onChange={e => handleChange('description', e.target.value)}
-                        />
+                            onChange={e => handleChange('description', e.target.value)} />
                         <FormControl fullWidth margin="normal">
                             <InputLabel id="quantityLabel">How many?</InputLabel>
                             <Select labelId="quantityLabel" label="How many?" value={itemData.quantity}
@@ -100,8 +99,8 @@ const ItemEditDrawer = ({ isOpen, toggleOpen, item }: ItemEditDrawerProps) => {
                     </Box>
                 </Box>
             </Drawer>
-        </Fragment >
-    )
-}
+        </Fragment>
+    );
+};
 
 export default ItemEditDrawer
