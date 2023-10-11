@@ -28,15 +28,14 @@ func NewDBContext() *DBContext {
 	}
 }
 
-var item Item
-var items []Item
-
 func (d *DBContext) FindOneItemById(itemId int) (Item, error) {
+	var item Item
 	result := d.db.First(&item, itemId)
 	return item, result.Error
 }
 
 func (d *DBContext) FindAllItems() ([]Item, error) {
+	var items []Item
 	result := d.db.Find(&items)
 	return items, result.Error
 }
@@ -48,6 +47,7 @@ func (d *DBContext) CreateNewItem(newItem Item) (Item, error) {
 }
 
 func (d *DBContext) UpdateItemById(itemId string, updatedItem Item) (Item, error) {
+	var item Item
 	d.db.First(&item, itemId)
 	item.Name = updatedItem.Name
 	item.Description = updatedItem.Description
