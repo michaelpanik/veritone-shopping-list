@@ -13,7 +13,7 @@ import { addItem, updateItem } from "../context/actions";
 import { Context } from "../context";
 import Loader from "./Loader";
 import { LastPage } from "@mui/icons-material";
-import { IconButton, Tooltip } from "@mui/material";
+import { Checkbox, FormControlLabel, FormGroup, IconButton, Tooltip } from "@mui/material";
 
 export type ItemEditDrawerProps = {
     isOpen: boolean
@@ -106,6 +106,10 @@ const ItemEditDrawer = ({ isOpen, toggleOpen, item }: ItemEditDrawerProps) => {
                                 {[1, 2, 3].map(val => <MenuItem value={val} key={`option_${val}`}>{val}</MenuItem>)}
                             </Select>
                         </FormControl>
+                        {item && <FormControl margin="normal">
+                            <FormControlLabel control={<Checkbox checked={itemData.purchased} onChange={e => handleChange('purchased', e.target.checked)} />} label="Purchased" />
+                        </FormControl>
+                        }
                     </Box>}
                     <Box sx={{ px: 3, py: 2, display: "flex", justifyContent: "flex-end", gap: 3 }}>
                         <Button variant="text" sx={{ textTransform: "capitalize", color: 'text.primary' }} onClick={toggleOpen} disabled={isLoading}>Cancel</Button>
