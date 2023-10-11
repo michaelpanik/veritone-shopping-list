@@ -1,15 +1,21 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
-import '@fontsource/nunito/300.css';
-import '@fontsource/nunito/400.css';
-import '@fontsource/nunito/500.css';
-import '@fontsource/nunito/600.css';
 import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, createTheme } from '@mui/material';
+
+const theme = createTheme({
+  typography: {
+    fontFamily: 'Nunito, Arial, sans-serif',
+  }
+});
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <CssBaseline />
-    <App />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <App />
+    </ThemeProvider>
   </React.StrictMode>,
 )
