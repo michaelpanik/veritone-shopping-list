@@ -47,7 +47,7 @@ func (d *DBContext) CreateNewItem(newItem Item) (Item, error) {
 	return item, result.Error
 }
 
-func (d *DBContext) UpdateItemById(itemId int, updatedItem Item) (Item, error) {
+func (d *DBContext) UpdateItemById(itemId string, updatedItem Item) (Item, error) {
 	d.db.First(&item, itemId)
 	item.Name = updatedItem.Name
 	item.Description = updatedItem.Description
@@ -57,7 +57,7 @@ func (d *DBContext) UpdateItemById(itemId int, updatedItem Item) (Item, error) {
 	return item, result.Error
 }
 
-func (d *DBContext) DeleteItemById(itemId int) (bool, error) {
+func (d *DBContext) DeleteItemById(itemId string) (bool, error) {
 	result := d.db.Delete(&Item{}, itemId)
 	return true, result.Error
 }

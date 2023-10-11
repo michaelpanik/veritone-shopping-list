@@ -101,7 +101,7 @@ func (db *DBContext) AddItem(c *gin.Context) {
 }
 
 func (db *DBContext) DeleteItem(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Params.ByName("id"))
+	id := c.Params.ByName("id")
 	_, error := db.DeleteItemById(id)
 
 	if error != nil {
@@ -112,7 +112,7 @@ func (db *DBContext) DeleteItem(c *gin.Context) {
 }
 
 func (db *DBContext) UpdateItem(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Params.ByName("id"))
+	id := c.Params.ByName("id")
 
 	var newItem struct {
 		Name        string `json:"name" binding:"required"`
