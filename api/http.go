@@ -54,40 +54,28 @@ type ServerInterface interface {
 	UpdateItem(c *gin.Context)
 }
 
-type HTTPContext struct {
-	c  *gin.Context
-	db *DBContext
-}
-
-func NewHTTPContext(c *gin.Context, db *DBContext) *HTTPContext {
-	return &HTTPContext{
-		c:  c,
-		db: db,
-	}
-}
-
-func (c *HTTPContext) GetAllItems() {
-	items, error := c.db.FindAllItems()
+func (db *DBContext) GetAllItems(c *gin.Context) {
+	items, error := db.FindAllItems()
 
 	if error != nil {
-		c.c.JSON(http.StatusNotFound, ErrorResponseObject{Status: http.StatusNotFound, Message: "No such item found"})
+		c.JSON(http.StatusNotFound, ErrorResponseObject{Status: http.StatusNotFound, Message: "No such item found"})
 	} else {
-		c.c.JSON(http.StatusOK, GetAllItemsResponseObject{Status: http.StatusOK, Data: items})
+		c.JSON(http.StatusOK, GetAllItemsResponseObject{Status: http.StatusOK, Data: items})
 	}
 }
 
-func (c *HTTPContext) GetOneItem() {
-	id, _ := strconv.Atoi(c.c.Params.ByName("id"))
-	item, error := c.db.FindOneItemById(id)
+func (db *DBContext) GetOneItem(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Params.ByName("id"))
+	item, error := db.FindOneItemById(id)
 
 	if error != nil {
-		c.c.JSON(http.StatusNotFound, ErrorResponseObject{Status: http.StatusNotFound, Message: "No such item found"})
+		c.JSON(http.StatusNotFound, ErrorResponseObject{Status: http.StatusNotFound, Message: "No such item found"})
 	} else {
-		c.c.JSON(http.StatusOK, GetOneItemResponseObject{Status: http.StatusOK, Data: item})
+		c.JSON(http.StatusOK, GetOneItemResponseObject{Status: http.StatusOK, Data: item})
 	}
 }
 
-func (c *HTTPContext) AddItem() {
+func (db *DBContext) AddItem(c *gin.Context) {
 	var newItem struct {
 		Name        string `json:"name" binding:"required"`
 		Description string `json:"description"`
@@ -95,9 +83,9 @@ func (c *HTTPContext) AddItem() {
 		Purchased   bool   `json:"purchased"`
 	}
 
-	if c.c.Bind(&newItem) == nil {
+	if c.Bind(&newItem) == nil {
 
-		createdItem, error := c.db.CreateNewItem(Item{
+		createdItem, error := db.CreateNewItem(Item{
 			Name:        newItem.Name,
 			Description: newItem.Description,
 			Quantity:    newItem.Quantity,
@@ -105,32 +93,32 @@ func (c *HTTPContext) AddItem() {
 		})
 
 		if error != nil {
-			c.c.JSON(http.StatusUnprocessableEntity, ErrorResponseObject{Status: http.StatusUnprocessableEntity, Message: "No such item found"})
+			c.JSON(http.StatusUnprocessableEntity, ErrorResponseObject{Status: http.StatusUnprocessableEntity, Message: "No such item found"})
 		} else {
-			c.c.JSON(http.StatusCreated, AddItemResponseObject{Status: http.StatusCreated, Data: createdItem})
+			c.JSON(http.StatusCreated, AddItemResponseObject{Status: http.StatusCreated, Data: createdItem})
 		}
 	}
 
 }
 
-func (c *HTTPContext) DeleteItem() {
-	id, _ := strconv.Atoi(c.c.Params.ByName("id"))
-	_, error := c.db.DeleteItemById(id)
+func (db *DBContext) DeleteItem(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Params.ByName("id"))
+	_, error := db.DeleteItemById(id)
 
 	if error != nil {
-		c.c.JSON(http.StatusAccepted, DeleteItemResponseObject{Status: http.StatusAccepted, Message: "Resource deleted successfully."})
+		c.JSON(http.StatusAccepted, DeleteItemResponseObject{Status: http.StatusAccepted, Message: "Resource deleted successfully."})
 	} else {
-		c.c.JSON(http.StatusNotFound, ErrorResponseObject{Status: http.StatusNotFound, Message: "No such item found"})
+		c.JSON(http.StatusNotFound, ErrorResponseObject{Status: http.StatusNotFound, Message: "No such item found"})
 	}
 }
 
-func (c *HTTPContext) UpdateItem() {
-	id, _ := strconv.Atoi(c.c.Params.ByName("id"))
-	updatedItem, error := c.db.FindOneItemById(id)
+func (db *DBContext) UpdateItem(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Params.ByName("id"))
+	updatedItem, error := db.FindOneItemById(id)
 
 	if error != nil {
-		c.c.JSON(http.StatusNotFound, ErrorResponseObject{Status: http.StatusNotFound, Message: "No such item found"})
+		c.JSON(http.StatusNotFound, ErrorResponseObject{Status: http.StatusNotFound, Message: "No such item found"})
 	} else {
-		c.c.JSON(http.StatusOK, UpdateItemResponseObject{Status: http.StatusOK, Data: updatedItem})
+		c.JSON(http.StatusOK, UpdateItemResponseObject{Status: http.StatusOK, Data: updatedItem})
 	}
 }

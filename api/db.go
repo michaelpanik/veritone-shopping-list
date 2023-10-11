@@ -43,7 +43,7 @@ func (d *DBContext) CreateNewItem(newItem Item) (Item, error) {
 	return item, result.Error
 }
 
-func (d *DBContext) UpdateItem(itemId int, updatedItem Item) (Item, error) {
+func (d *DBContext) UpdateItemById(itemId int, updatedItem Item) (Item, error) {
 	d.db.First(&item, itemId)
 	item.Name = updatedItem.Name
 	item.Description = updatedItem.Description
