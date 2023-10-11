@@ -32,7 +32,7 @@ const ItemEditDrawer = ({ isOpen, toggleOpen, item }: ItemEditDrawerProps) => {
         }
     }, []);
 
-    const handleChange = (key: keyof Item, value: string) => {
+    const handleChange = (key: keyof Item, value: string | number) => {
         setItemData({ ...itemData, [key]: value });
     };
 
@@ -68,7 +68,6 @@ const ItemEditDrawer = ({ isOpen, toggleOpen, item }: ItemEditDrawerProps) => {
                         </Typography>
                     </Box>
                     {itemData && <Box sx={{ flexGrow: 1, px: 3, py: 5 }}>
-                        {itemData.ID}
                         <Typography variant="body1" sx={{ fontWeight: 500, }}>
                             {item ? "Edit an Item" : "Add an Item"}
                         </Typography>
@@ -84,7 +83,7 @@ const ItemEditDrawer = ({ isOpen, toggleOpen, item }: ItemEditDrawerProps) => {
                         <FormControl fullWidth margin="normal">
                             <InputLabel id="quantityLabel">How many?</InputLabel>
                             <Select labelId="quantityLabel" label="How many?" value={itemData.quantity}
-                                onChange={e => handleChange('quantity', e.target.value.toString())}
+                                onChange={e => handleChange('quantity', Number(e.target.value))}
                             >
                                 {[1, 2, 3].map(val => <MenuItem value={val} key={`option_${val}`}>{val}</MenuItem>)}
                             </Select>

@@ -36,7 +36,7 @@ const ItemsListRow: React.FC<ItemsListRowProps> = ({ item, handleEditClick }) =>
                 onChange={handlePurchasedItem} />
             <Box sx={{ flexGrow: 1 }}>
                 <Typography variant="body1" sx={{ fontWeight: 500, color: item.purchased ? 'primary.main' : 'text.primary', textDecoration: item.purchased ? 'line-through' : 'none' }}>
-                    {item.ID}: {item.name}
+                    {item.name}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'text.secondary', textDecoration: item.purchased ? 'line-through' : 'none' }}>
                     {item.description}
