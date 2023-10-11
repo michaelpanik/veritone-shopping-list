@@ -1,2 +1,0 @@
-go build -o main
-docker restart 2ec4a83d29527f71b3071957f36c9d2f9ffbbb40d545e24abe4fd75cb2dfefcd

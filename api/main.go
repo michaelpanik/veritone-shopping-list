@@ -1,6 +1,10 @@
 package main
 
 import (
+	"log"
+	"michaelpanik/veritone-shopping-list-api/db"
+	"michaelpanik/veritone-shopping-list-api/routes"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -13,12 +17,16 @@ func main() {
 
 	router.Use(cors.New(config))
 
-	db := NewDBContext()
-	router.GET("/item", db.GetAllItems)
-	router.GET("/item/:id", db.GetOneItem)
-	router.POST("/item", db.AddItem)
-	router.PUT("/item/:id", db.UpdateItem)
-	router.DELETE("/item/:id", db.DeleteItem)
+	db := db.NewDBContext()
+	item := routes.NewItemServer(db)
 
-	router.Run()
+	router.GET("/item", item.GetAllItems)
+	router.GET("/item/:id", item.GetOneItem)
+	router.POST("/item", item.AddItem)
+	router.PUT("/item/:id", item.UpdateItem)
+	router.DELETE("/item/:id", item.DeleteItem)
+
+	if err := router.Run(); err != nil {
+		log.Fatal(err)
+	}
 }
