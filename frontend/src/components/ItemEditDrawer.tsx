@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment, useCallback, useContext, useEffect, useState } from "react";
 import Drawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -12,6 +12,8 @@ import { Item } from "./ItemsList";
 import { addItem, updateItem } from "../context/actions";
 import { Context } from "../context";
 import Loader from "./Loader";
+import { LastPage } from "@mui/icons-material";
+import { IconButton, Tooltip } from "@mui/material";
 
 export type ItemEditDrawerProps = {
     isOpen: boolean
@@ -35,6 +37,10 @@ const ItemEditDrawer = ({ isOpen, toggleOpen, item }: ItemEditDrawerProps) => {
     const handleChange = (key: keyof Item, value: string | number) => {
         setItemData({ ...itemData, [key]: value });
     };
+
+    const handleDescriptionChange = (text: string) => {
+        handleChange('description', text.slice(0, 100))
+    }
 
     const saveChanges = async () => {
         if (!itemData) return;
@@ -62,12 +68,19 @@ const ItemEditDrawer = ({ isOpen, toggleOpen, item }: ItemEditDrawerProps) => {
                 <Box
                     sx={{ width: 560, height: 1, display: 'flex', flexDirection: 'column', borderBottom: 5, borderColor: 'primary.main' }}
                 >
-                    <Box sx={{ backgroundColor: '#fafafa', borderBottom: 1, borderColor: 'grey.300', px: 3, py: 2 }}>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textTransform: 'uppercase' }}>
+                    <Box sx={{ backgroundColor: '#fafafa', borderBottom: 1, borderColor: 'grey.300', px: 3, py: 2, display: 'flex', justify: 'space-between', alignItems: 'center' }}>
+                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textTransform: 'uppercase', fontFamily: 'Dosis' }}>
                             Shopping List
                         </Typography>
+                        <Tooltip title="Close">
+                            <IconButton onClick={toggleOpen}>
+                                <LastPage sx={{
+                                    color: "#555F7C"
+                                }} />
+                            </IconButton>
+                        </Tooltip>
                     </Box>
-                    {itemData && <Box sx={{ flexGrow: 1, px: 3, py: 5 }}>
+                    {itemData && <Box sx={{ flexGrow: 1, p: 3 }}>
                         <Typography variant="body1" sx={{ fontWeight: 500, }}>
                             {item ? "Edit an Item" : "Add an Item"}
                         </Typography>
@@ -77,9 +90,14 @@ const ItemEditDrawer = ({ isOpen, toggleOpen, item }: ItemEditDrawerProps) => {
                         <TextField id="outlined-basic" label="Item Name" variant="outlined" fullWidth margin="normal"
                             value={itemData.name}
                             onChange={e => handleChange('name', e.target.value)} />
-                        <TextField id="outlined-basic" label="Description" variant="outlined" rows={6} multiline fullWidth margin="normal"
-                            value={itemData.description}
-                            onChange={e => handleChange('description', e.target.value)} />
+                        <FormControl fullWidth margin="normal" sx={{ position: 'relative' }}>
+                            <TextField id="outlined-basic" label="Description" variant="outlined" rows={6} multiline fullWidth
+                                value={itemData.description}
+                                onChange={e => handleDescriptionChange(e.target.value)} />
+                            <Box sx={{ fontSize: 12, position: 'absolute', color: itemData.description.length > 99 ? "red" : "text.secondary", bottom: '0.75em', right: '1.25em' }}>
+                                {itemData.description.length}/100
+                            </Box>
+                        </FormControl>
                         <FormControl fullWidth margin="normal">
                             <InputLabel id="quantityLabel">How many?</InputLabel>
                             <Select labelId="quantityLabel" label="How many?" value={itemData.quantity}
