@@ -69,7 +69,11 @@ const ItemsList = () => {
                                     mountOnEnter
                                     unmountOnExit
                                 >
-                                    {ItemsListRow({ i, item, handleEditClick: () => handleEditClick(item), key: `item_list_row_${i}` })}
+                                    {ItemsListRow({
+                                        item,
+                                        handleEditClick,
+                                        key: `item_list_row_${i}`
+                                    })}
                                 </Slide>
                             ))}
                         </TransitionGroup>

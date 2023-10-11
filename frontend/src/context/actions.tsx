@@ -116,13 +116,14 @@ export const addItem = async (item: Item): Promise<Action> => {
  * @param {boolean} purchased - The new purchased status.
  * @returns {Action} An action object to toggle the purchased status of the item.
  */
-export const toggleItemPurchased = (item: Item, purchased: boolean) => {
-    updateItemAPI(item, 'purchased', purchased);
+export const toggleItemPurchased = async (item: Item, purchased: boolean) => {
+    const updatedItem = await updateItemAPI(item, 'purchased', purchased);
+    console.log(updatedItem)
 
     return {
         type: ACTION.SET_ITEM_PURCHASED,
         payload: {
-            itemId: item.ID,
+            itemId: updatedItem.ID,
             purchased
         }
     };

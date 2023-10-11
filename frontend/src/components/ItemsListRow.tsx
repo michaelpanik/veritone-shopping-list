@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import Slide from '@mui/material/Slide';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Checkbox from '@mui/material/Checkbox'
@@ -13,28 +12,28 @@ import { deleteItem, toggleItemPurchased } from '../context/actions';
 import { Item } from './ItemsList';
 
 type ItemsListRowProps = {
-    i: number
     item: Item
-    handleEditClick: () => void
+    handleEditClick: (item: Item) => void
 }
 
-const ItemsListRow: React.FC<ItemsListRowProps> = ({ i, item, handleEditClick }) => {
+const ItemsListRow: React.FC<ItemsListRowProps> = ({ item, handleEditClick }) => {
     const { dispatch } = useContext(Context)
 
     const handleDeletedItem = async (item: Item) => {
         dispatch(await deleteItem(item.ID))
     }
 
+    const handlePurchasedItem = async (e: Event) => {
+        dispatch(await toggleItemPurchased(item, e.target?.checked));
+    }
+
     return (
-        <Paper sx={{ display: 'flex', py: 3, pl: 1, pr: 3, background: item.purchased && '#D5DFE92B', borderColor: item.purchased && 'transparent', mb: 2 }}
+        <Paper sx={{ display: 'flex', py: 3, pl: 1, pr: 3, background: item.purchased ? '#D5DFE92B' : '', borderColor: item.purchased ? 'transparent' : '', mb: 2 }}
             variant="outlined"
 
         >
-
             <Checkbox checked={item.purchased} sx={{ mr: 1 }}
-                onChange={e => {
-                    dispatch(toggleItemPurchased(item, e.target.checked));
-                }} />
+                onChange={handlePurchasedItem} />
             <Box sx={{ flexGrow: 1 }}>
                 <Typography variant="body1" sx={{ fontWeight: 500, color: item.purchased ? 'primary.main' : 'text.primary', textDecoration: item.purchased ? 'line-through' : 'none' }}>
                     {item.ID}: {item.name}
@@ -44,7 +43,7 @@ const ItemsListRow: React.FC<ItemsListRowProps> = ({ i, item, handleEditClick })
                 </Typography>
             </Box>
             <Tooltip title="Edit">
-                <IconButton onClick={handleEditClick}>
+                <IconButton onClick={() => handleEditClick(item)}>
                     <EditOutlined />
                 </IconButton>
             </Tooltip>
